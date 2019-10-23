@@ -82,7 +82,6 @@ function processSingleCase( stream, countriesNumber ) {
 function processStream ( stream ) {
     return new Promise(resolve => {
         const results = [];
-        let count = 0;
         stream.on('readable', () => {
             let input;
             while (null !== (input = stream.read(1))) {
@@ -92,12 +91,7 @@ function processStream ( stream ) {
                 }
                 else break;
             }
-            if(results.length === 0) {
-                console.log("Ooooops, no neighbours(((")
-
-            } else {
-                resolve(results);
-            }
+            resolve(results);
 
         })
     })
