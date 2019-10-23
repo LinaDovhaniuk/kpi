@@ -13,10 +13,8 @@ function compareInputToString ( input, string ) {
 function getCountryParams ( stream ) {
     const params = [];
     while ( null !== (input = stream.read(1)) ) {
-        if ( compareInputToString(input, ' ') ) {
-            continue;
-        }
-        if (compareInputToString(input, '\r')) {
+        if (compareInputToString(input, ' ') ||
+            compareInputToString(input, '\r')) {
             continue;
         }
         if (compareInputToString(input, '\n')) {
@@ -32,12 +30,13 @@ function getCountryParams ( stream ) {
 function getCountryName ( stream ) {
     let name = '';
     while ( null !== (input = stream.read(1)) ) {
-        if (compareInputToString(input, '\r'))
+        if (compareInputToString(input, '\r') ||
+            compareInputToString(input, '\n')) {
             continue;
-        if (compareInputToString(input, '\n'))
-            continue;
-        if (compareInputToString(input, ' '))
+        }
+        if (compareInputToString(input, ' ')) {
             break;
+        }
         name = name.concat(input.toString());
     }
     return name;
@@ -54,10 +53,7 @@ function areParamsValid ( params ) {
     if (!params.reduce((acc, param) => acc && isInTheNormalRange(param), true)) {
         return false;
     }
-    if (!(params[0] <= params[2])) {
-        return false;
-    }
-    if (!(params[1] <= params[3])) {
+    if (!(params[0] <= params[2]) && !(params[1] <= params[3])) {
         return false;
     }
     return true;
@@ -76,8 +72,8 @@ function processSingleCase( stream, countriesNumber ) {
         }
         map.addCountry(
             new Country(name,
-            new City (params[0], params[1]),
-            new City (params[2], params[3]))
+                new City (params[0], params[1]),
+                new City (params[2], params[3]))
         );
     }
     return map.diffusion();
@@ -86,16 +82,23 @@ function processSingleCase( stream, countriesNumber ) {
 function processStream ( stream ) {
     return new Promise(resolve => {
         const results = [];
+        let count = 0;
         stream.on('readable', () => {
             let input;
-            while ( null !== (input = stream.read(1)) ) {
+            while (null !== (input = stream.read(1))) {
                 let res = processSingleCase( stream, Number(input) );
                 if ( !(Object.keys(res).length === 0 && res.constructor === Object) ) {
                     results.push(res);
                 }
                 else break;
             }
-            resolve(results)
+            if(results.length === 0) {
+                console.log("Ooooops, no neighbours(((")
+
+            } else {
+                resolve(results);
+            }
+
         })
     })
 }

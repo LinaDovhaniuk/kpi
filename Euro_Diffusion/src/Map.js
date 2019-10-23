@@ -1,7 +1,8 @@
 const City = require('./City');
+
 const minCoordinate = 0;
 const maxCoordinate = 9;
-
+const matrixDimension = 10;
 
 class Map {
     constructor() {
@@ -13,9 +14,9 @@ class Map {
     }
 
     makeGrid () {
-        const grid = new Array(10);
-        for (let i = 0; i < grid.length; i++) {
-            grid[i] = new Array(10);
+        const grid = new Array(matrixDimension);
+        for (let i = 0; i < matrixDimension; i++) {
+            grid[i] = new Array(matrixDimension);
         }
         return grid;
     }
@@ -59,10 +60,6 @@ class Map {
         this.cities.map(city => city.setBalances(this.countries));
     }
 
-    transaction ( from, to, countryName ) {
-        to.receiveMoney( countryName, from.pay(countryName) )
-    }
-
     isExchangeDay ( day ) {
         this.countries.map(country => {
             if (country.exchangeDay < 0)
@@ -71,7 +68,7 @@ class Map {
         return ( this.cities.reduce((acc, city) => {
             if( !city.isReady(this.countries) ) {
                 city.country.exchangeDay = -1;
-                return acc && false;
+                return false;
             } else {
                 return acc;
             }

@@ -19,14 +19,12 @@ class City {
         Object.keys( this.inBalance ).map(key => {
             this.currentBalance[ key ]+= this.inBalance[ key ];
         }
-        )
-    }
+        )}
 
     flushMoney () {
         Object.keys( this.inBalance ).map(key => {
                 this.inBalance[ key ] = 0;
-        }
-        )
+        })
     }
 
     setBalances ( countries ) {
@@ -45,8 +43,7 @@ class City {
     countOutcome () {
         Object.keys( this.currentBalance ).map(key => {
                 this.outBalance[ key ] = Number.parseInt(this.currentBalance[ key ]*share);
-            }
-        )
+            })
     }
 
     pay ( countryName ) {
