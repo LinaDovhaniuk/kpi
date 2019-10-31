@@ -8,7 +8,7 @@ class Country {
         southWestCity.country = this;
         northEastCity.country = this;
         this.cities = [ southWestCity, northEastCity ];
-        this.exchangeDay = -1
+        this.exchangeDay = 0;
     }
 }
 module.exports = Country;

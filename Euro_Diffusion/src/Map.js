@@ -1,8 +1,10 @@
 const City = require('./City');
+const {findCityByCoordinates, checkNormalRange} = require('./Check');
 
 const minCoordinate = 0;
 const maxCoordinate = 9;
 const matrixDimension = 10;
+
 
 class Map {
     constructor() {
@@ -21,40 +23,30 @@ class Map {
         return grid;
     }
 
+
     init () {
         this.addNeighbours();
         this.setInitialBalances();
     }
 
-    findCityByCoordinates ( cities, x, y ) {
-        return cities.find(({ x: toFindX, y: toFindY }) => toFindX === x && toFindY === y );
-    }
-
     addNeighbours () {
         this.cities.map(city => {
             const {x, y} = city;
-            if( this.checkNormalRange(x, y) ) {
-                city.addNeighbour(this.findCityByCoordinates(this.cities, x-1, y));
+            if( checkNormalRange(x, y) ) {
+                city.addNeighbour(findCityByCoordinates(this.cities, x-1, y));
             }
-            if( this.checkNormalRange(x, y) ) {
-                city.addNeighbour(this.findCityByCoordinates(this.cities, x+1, y));
+            if( checkNormalRange(x, y) ) {
+                city.addNeighbour(findCityByCoordinates(this.cities, x+1, y));
             }
-            if( this.checkNormalRange(x, y) ) {
-                city.addNeighbour(this.findCityByCoordinates(this.cities, x, y+1));
+            if( checkNormalRange(x, y) ) {
+                city.addNeighbour(findCityByCoordinates(this.cities, x, y+1));
             }
-            if( this.checkNormalRange(x, y) ) {
-                city.addNeighbour(this.findCityByCoordinates(this.cities, x, y-1));
+            if( checkNormalRange(x, y) ) {
+                city.addNeighbour(findCityByCoordinates(this.cities, x, y-1));
             }
         })
     }
 
-    isInTheNormalRange ( coordinate ) {
-        return coordinate >= minCoordinate && coordinate <= maxCoordinate;
-    }
-
-    checkNormalRange( x, y ) {
-        return this.isInTheNormalRange(x) && this.isInTheNormalRange(y);
-    }
 
     setInitialBalances () {
         this.cities.map(city => city.setBalances(this.countries));
@@ -91,7 +83,7 @@ class Map {
                 city.flushMoney();
             });
             day++;
-        } while(!this.isExchangeDay(day))
+        } while(!this.isExchangeDay(day));
         return this.getDiffusionResult()
     }
 

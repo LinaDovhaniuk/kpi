@@ -1,5 +1,6 @@
 const initialAmount = 1000000;
 const share = 1/1000;
+const {findCityByCoordinates} = require('./Check');
 
 class City {
     constructor ( x, y ) {
@@ -51,21 +52,53 @@ class City {
         return this.outBalance[countryName];
     }
 
-    findCityByCoordinates ( cities, x, y ) {
-        return cities.find(({ x: toFindX, y: toFindY }) => toFindX === x && toFindY === y );
+    checkNeighboursExist(city) {
+        return city.neighbours.length === 0;
     }
 
+
     addNeighbour ( city ) {
-        if ( city !== undefined ) {
-            if( this.findCityByCoordinates( this.neighbours, city.x, city.y ) === undefined ) {
-                this.neighbours.push(city);
+
+        if (typeof(city) !== 'undefined') {
+            if (city.x !== 0){
+                if(!(findCityByCoordinates(this.neighbours, city.x, city.y - 1) && this.checkNeighboursExist(findCityByCoordinates(this.neighbours, city.x, city.y - 1)))){
+                    this.neighbours.push(city);
+                }
+            }
+
+            if (city.y !== 9){
+                if(!(findCityByCoordinates(this.neighbours, city.x, city.y + 1) && this.checkNeighboursExist(findCityByCoordinates(this.neighbours, city.x, city.y + 1)))){
+                    this.neighbours.push(city);
+                }
+            }
+
+            if (city.x !== 0){
+                if(!(findCityByCoordinates(this.neighbours, city.x - 1, city.y) && this.checkNeighboursExist(findCityByCoordinates(this.neighbours, city.x - 1, city.y)))){
+                    this.neighbours.push(city);
+                }
+            }
+
+            if (city.y !== 9){
+                if(!(findCityByCoordinates(this.neighbours, city.x + 1, city.y) && this.checkNeighboursExist(findCityByCoordinates(this.neighbours,city.x + 1, city.y)))){
+                    this.neighbours.push(city);
+                }
             }
         }
+        else console.log('Ooops, no neighbours');
+
+
+        //
+        // if ( city !== undefined ) {
+        //     if( findCityByCoordinates( this.neighbours, city.x, city.y ) === undefined ) {
+        //         this.neighbours.push(city);
+        //     }
+        // }
     }
 
     isReady ( countries ) {
         return countries.reduce( (acc, { name }) => acc && (this.currentBalance[ name ] !== 0), true)
     }
+
 }
 
 

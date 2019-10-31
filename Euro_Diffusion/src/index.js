@@ -2,9 +2,7 @@ const fs = require('fs');
 const Country = require('./Country');
 const City = require('./City');
 const Map = require('./Map');
-
-const minCoordinate = 0;
-const maxCoordinate = 9;
+const {isInTheNormalRange} = require('./Check');
 
 function compareInputToString ( input, string ) {
     return Buffer.compare(input, Buffer.from(string)) === 0;
@@ -34,17 +32,14 @@ function getCountryName ( stream ) {
             compareInputToString(input, '\n')) {
             continue;
         }
-        if (compareInputToString(input, ' ')) {
+        if (compareInputToString(input, ':')) {
             break;
         }
         name = name.concat(input.toString());
     }
-    return name;
+    return name.replace(/(^\s+|\s+$)/g, '');
 }
 
-function isInTheNormalRange ( coordinate ) {
-    return coordinate >= minCoordinate && coordinate <= maxCoordinate;
-}
 
 function areParamsValid ( params ) {
     if (!(Array.isArray(params) && params.length === 4)) {
@@ -72,8 +67,8 @@ function processSingleCase( stream, countriesNumber ) {
         }
         map.addCountry(
             new Country(name,
-                new City (params[0], params[1]),
-                new City (params[2], params[3]))
+            new City (params[0], params[1]),
+            new City (params[2], params[3]))
         );
     }
     return map.diffusion();
