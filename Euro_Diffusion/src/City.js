@@ -56,43 +56,39 @@ class City {
         return city.neighbours.length === 0;
     }
 
+    checkCoordinates(neighbours,x, y) {
+        return  (findCityByCoordinates(neighbours, x, y) &&
+            this.checkNeighboursExist(findCityByCoordinates(neighbours, x, y )));
+    }
+
 
     addNeighbour ( city ) {
 
-        if (typeof(city) !== 'undefined') {
-            if (city.x !== 0){
-                if(!(findCityByCoordinates(this.neighbours, city.x, city.y - 1) && this.checkNeighboursExist(findCityByCoordinates(this.neighbours, city.x, city.y - 1)))){
+        if (typeof (city) !== 'undefined') {
+            if (city.x !== 0) {
+                if (!this.checkCoordinates(this.neighbours, city.x, city.y - 1)) {
                     this.neighbours.push(city);
                 }
             }
 
-            if (city.y !== 9){
-                if(!(findCityByCoordinates(this.neighbours, city.x, city.y + 1) && this.checkNeighboursExist(findCityByCoordinates(this.neighbours, city.x, city.y + 1)))){
+            if (city.y !== 9) {
+                if (!this.checkCoordinates(this.neighbours, city.x, city.y + 1)) {
                     this.neighbours.push(city);
                 }
             }
 
-            if (city.x !== 0){
-                if(!(findCityByCoordinates(this.neighbours, city.x - 1, city.y) && this.checkNeighboursExist(findCityByCoordinates(this.neighbours, city.x - 1, city.y)))){
+            if (city.x !== 0) {
+                if (!this.checkCoordinates(this.neighbours, city.x - 1, city.y)) {
                     this.neighbours.push(city);
                 }
             }
 
-            if (city.y !== 9){
-                if(!(findCityByCoordinates(this.neighbours, city.x + 1, city.y) && this.checkNeighboursExist(findCityByCoordinates(this.neighbours,city.x + 1, city.y)))){
+            if (city.y !== 9) {
+                if (!this.checkCoordinates(this.neighbours, city.x + 1, city.y)) {
                     this.neighbours.push(city);
                 }
             }
-        }
-        else console.log('Ooops, no neighbours');
-
-
-        //
-        // if ( city !== undefined ) {
-        //     if( findCityByCoordinates( this.neighbours, city.x, city.y ) === undefined ) {
-        //         this.neighbours.push(city);
-        //     }
-        // }
+        } else console.log('Ooops, no neighbours');
     }
 
     isReady ( countries ) {
